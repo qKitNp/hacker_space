@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Space</title>
+    <link rel="stylesheet" href="newtab.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div id="loading" class="loading">Loading fresh knowledge...</div>
+        <div id="content" class="content hidden">
+            <a id="title-link" href="#" target="_blank" class="title-link">
+                <h1 id="title"></h1>
+            </a>
+            <div class="meta">
+                <span id="domain-container" class="meta-item hidden"><a id="domain-link" class="meta-link" href="#"
+                        target="_blank"></a></span>
+                <span id="points-container" class="meta-item hidden"><a id="points-link" class="meta-link" href="#"
+                        target="_blank"><span id="points"></span> points</a></span>
+                <span id="author-container" class="meta-item"><span class="by-label">by</span> <a id="author-link"
+                        class="meta-link author" href="#" target="_blank"></a></span>
+            </div>
+            <p id="summary" class="summary"></p>
+        </div>
+        <div id="error" class="error hidden"></div>
+
+        <!-- Settings UI -->
+        <button id="settings-btn" class="settings-btn" aria-label="Settings">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+            </svg>
+        </button>
+
+        <div id="settings-panel" class="settings-panel hidden">
+            <div class="settings-section">
+                <h3>Theme</h3>
+                <div class="btn-group">
+                    <button class="theme-btn active" data-value="auto">Auto</button>
+                    <button class="theme-btn" data-value="light">Light</button>
+                    <button class="theme-btn" data-value="dark">Dark</button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3>Font</h3>
+                <div class="btn-group">
+                    <button class="font-btn active" data-value="sans">Sans</button>
+                    <button class="font-btn" data-value="serif" style="font-family: serif;">Serif</button>
+                    <button class="font-btn" data-value="mono" style="font-family: monospace;">Mono</button>
+                </div>
+            </div>
+            <div class="settings-section">
+                <h3>Visible Items</h3>
+                <label class="toggle-label"><input type="checkbox" id="toggle-points" checked> Points</label>
+                <label class="toggle-label"><input type="checkbox" id="toggle-domain" checked> Domain</label>
+                <label class="toggle-label"><input type="checkbox" id="toggle-author" checked> Author</label>
+                <label class="toggle-label"><input type="checkbox" id="toggle-summary" checked> Summary</label>
+            </div>
+        </div>
+    </div>
+    <script src="newtab.js"></script>
+</body>
+
+</html>

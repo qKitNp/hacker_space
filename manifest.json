@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Hacker Space",
+  "version": "1.0",
+  "description": "A minimal new tab page showing a random Hacker News item.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": [],
+  "host_permissions": [
+    "https://hacker-news-extension-backend-518880531324.northamerica-northeast1.run.app/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
