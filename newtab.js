@@ -1,4 +1,4 @@
-const API_URL = 'https://hacker-news-extension-backend-518880531324.northamerica-northeast1.run.app/random';
+const API_URL = 'https://hn.tinkerers.space/random';
 
 // Default Settings
 const defaultSettings = {

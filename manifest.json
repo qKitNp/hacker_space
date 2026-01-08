@@ -8,7 +8,7 @@
   },
   "permissions": [],
   "host_permissions": [
-    "https://hacker-news-extension-backend-518880531324.northamerica-northeast1.run.app/*"
+    "https://hn.tinkerers.space/*"
   ],
   "icons": {
     "16": "icons/icon16.png",
