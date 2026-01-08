@@ -104,6 +104,44 @@ h1 {
     font-weight: 300;
 }
 
+.summary strong {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.summary em {
+    font-style: italic;
+}
+
+.summary code {
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+    background: rgba(128, 128, 128, 0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.summary a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.summary a:hover {
+    text-decoration: underline;
+}
+
+.summary p {
+    margin: 1rem 0;
+}
+
+.summary p:first-child {
+    margin-top: 0;
+}
+
+.summary p:last-child {
+    margin-bottom: 0;
+}
+
 .error {
     color: #ff4d4d;
     font-size: 1rem;

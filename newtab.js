@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         authorLinkEl.textContent = data.by;
         authorLinkEl.href = `https://news.ycombinator.com/user?id=${data.by}`;
 
-        summaryEl.textContent = data.summary || "No summary available.";
+        summaryEl.innerHTML = renderMarkdown(data.summary || "No summary available.");
 
         pointsEl.textContent = data.score || 0;
         pointsLinkEl.href = `https://news.ycombinator.com/item?id=${data.id}`;
@@ -186,4 +186,36 @@ function initSettingsUI() {
             saveSettings();
         });
     });
+}
+
+function renderMarkdown(text) {
+    if (!text) return "";
+
+    // Escape HTML to prevent XSS
+    let html = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+    // Basic Markdown conversion
+    html = html
+        // Bold
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/__(.*?)\__/g, '<strong>$1</strong>')
+        // Italic
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/_(.*?)_/g, '<em>$1</em>')
+        // Inline code
+        .replace(/`(.*?)`/g, '<code>$1</code>')
+        // Links
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+        // Paragraphs (double newline)
+        .replace(/\n\n/g, '</p><p>')
+        // Line breaks (single newline)
+        .replace(/\n/g, '<br>');
+
+    // Wrap in paragraph if not already
+    return `<p>${html}</p>`;
 }
