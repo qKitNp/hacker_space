@@ -201,6 +201,8 @@ function renderMarkdown(text) {
 
     // Basic Markdown conversion
     html = html
+        // Remove headings (strip # markers)
+        .replace(/^#+\s+/gm, '')
         // Bold
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/__(.*?)\__/g, '<strong>$1</strong>')
