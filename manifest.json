@@ -6,6 +6,11 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{40cd18c0-2a9a-4649-99bd-81880cc9bd55}"
+    }
+  },
   "permissions": [],
   "host_permissions": [
     "https://hn.tinkerers.space/*"
