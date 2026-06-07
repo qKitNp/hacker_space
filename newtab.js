@@ -1,4 +1,6 @@
-const API_URL = 'https://hn.tinkerers.space/random';
+const API_URL = 'https://hn.tinkerers.space/latest_summaries?limit=100';
+const CACHE_KEY = 'hs_latest_summaries_cache';
+const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 
 // Default Settings
 const defaultSettings = {
@@ -30,13 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const domainLinkEl = document.getElementById('domain-link');
 
     try {
-        const response = await fetch(API_URL);
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        const data = await getRandomHackerNewsItem();
 
         // Populate data
         titleEl.textContent = data.title;
@@ -88,6 +84,80 @@ function loadSettings() {
 function saveSettings() {
     localStorage.setItem('hs_settings', JSON.stringify(currentSettings));
     applySettings();
+}
+
+async function getRandomHackerNewsItem() {
+    const cachedItems = getCachedItems();
+    const isCacheFresh = cachedItems && Date.now() - cachedItems.timestamp < CACHE_TTL_MS;
+
+    if (isCacheFresh) {
+        return pickRandomItem(cachedItems.items);
+    }
+
+    try {
+        const items = await fetchLatestSummaries();
+        cacheItems(items);
+        return pickRandomItem(items);
+    } catch (error) {
+        if (cachedItems) {
+            console.warn('Using expired Hacker News cache after refresh failed:', error);
+            return pickRandomItem(cachedItems.items);
+        }
+
+        throw error;
+    }
+}
+
+async function fetchLatestSummaries() {
+    const response = await fetch(API_URL);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+    }
+
+    const items = await response.json();
+
+    if (!Array.isArray(items) || items.length === 0) {
+        throw new Error('Invalid latest summaries response');
+    }
+
+    return items;
+}
+
+function getCachedItems() {
+    const saved = localStorage.getItem(CACHE_KEY);
+
+    if (!saved) {
+        return null;
+    }
+
+    try {
+        const cached = JSON.parse(saved);
+
+        if (
+            typeof cached.timestamp !== 'number' ||
+            !Array.isArray(cached.items) ||
+            cached.items.length === 0
+        ) {
+            return null;
+        }
+
+        return cached;
+    } catch (error) {
+        console.warn('Ignoring malformed Hacker News cache:', error);
+        return null;
+    }
+}
+
+function cacheItems(items) {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({
+        timestamp: Date.now(),
+        items
+    }));
+}
+
+function pickRandomItem(items) {
+    return items[Math.floor(Math.random() * items.length)];
 }
 
 function applySettings() {
