@@ -197,6 +197,7 @@ h1 {
     border-radius: 50%;
     transition: all 0.2s ease;
     opacity: 0.5;
+    z-index: 100;
 }
 
 .settings-btn:hover {
@@ -219,7 +220,7 @@ h1 {
     text-align: left;
     border: 1px solid rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
-    z-index: 100;
+    z-index: 101;
 }
 
 .settings-section {
