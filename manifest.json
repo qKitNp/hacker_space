@@ -8,7 +8,8 @@
   },
   "permissions": [],
   "host_permissions": [
-    "https://hn.tinkerers.space/*"
+    "https://hn.tinkerers.space/*",
+    "https://hacker-news.firebaseio.com/*"
   ],
   "icons": {
     "16": "icons/icon16.png",

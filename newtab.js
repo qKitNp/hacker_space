@@ -1,4 +1,5 @@
 const API_URL = 'https://hn.tinkerers.space/latest_summaries?limit=100';
+const HN_ITEM_API_URL = 'https://hacker-news.firebaseio.com/v0/item';
 const CACHE_KEY = 'hs_latest_summaries_cache';
 const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
 
@@ -95,7 +96,7 @@ async function getRandomHackerNewsItem() {
     }
 
     try {
-        const items = await fetchLatestSummaries();
+        const items = await refreshScores(await fetchLatestSummaries());
         cacheItems(items);
         return pickRandomItem(items);
     } catch (error) {
@@ -122,6 +123,37 @@ async function fetchLatestSummaries() {
     }
 
     return items;
+}
+
+async function refreshScores(items) {
+    return Promise.all(items.map(async item => ({
+        ...item,
+        score: await fetchRealtimeScore(item.id, item.score)
+    })));
+}
+
+async function fetchRealtimeScore(itemId, fallbackScore = 0) {
+    const fallback = Number.isFinite(Number(fallbackScore)) ? Number(fallbackScore) : 0;
+
+    if (!itemId) {
+        return fallback;
+    }
+
+    try {
+        const response = await fetch(`${HN_ITEM_API_URL}/${encodeURIComponent(itemId)}.json`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch realtime score: ${response.status} ${response.statusText}`);
+        }
+
+        const item = await response.json();
+        const realtimeScore = Number(item && item.score);
+
+        return Number.isFinite(realtimeScore) ? realtimeScore : fallback;
+    } catch (error) {
+        console.warn('Using cached Hacker News score after realtime refresh failed:', error);
+        return fallback;
+    }
 }
 
 function getCachedItems() {
