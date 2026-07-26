@@ -1,7 +1,10 @@
 const API_URL = 'https://hn.tinkerers.space/latest_summaries?limit=100';
 const HN_ITEM_API_URL = 'https://hacker-news.firebaseio.com/v0/item';
 const CACHE_KEY = 'hs_latest_summaries_cache';
-const CACHE_TTL_MS = 2 * 60 * 60 * 1000;
+// Short TTL so we pick up backend backfills quickly; stale cache still paints instantly
+const CACHE_TTL_MS = 30 * 60 * 1000;
+// Prefer stories posted within this window when picking randomly
+const PREFERRED_STORY_AGE_MS = 36 * 60 * 60 * 1000;
 
 // Default Settings
 const defaultSettings = {
@@ -62,10 +65,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             domainLinkEl.href = 'https://news.ycombinator.com';
         }
 
-        // Show content
+        // Show content immediately — don't wait for realtime score refresh
         loadingEl.classList.add('hidden');
         contentEl.classList.remove('hidden');
         contentEl.style.animation = 'fadeIn 0.5s ease-out forwards';
+
+        // Soft-update points after the page is already visible
+        updateScoreInBackground(data.id, pointsEl);
 
     } catch (error) {
         console.error('Error fetching Hacker News item:', error);
@@ -87,26 +93,36 @@ function saveSettings() {
     applySettings();
 }
 
+/**
+ * Fast path for first paint:
+ * 1. Fresh cache → instant
+ * 2. Stale cache → show immediately, refresh list in background
+ * 3. No cache → one API call for summaries, then show (no bulk score fan-out)
+ */
 async function getRandomHackerNewsItem() {
     const cachedItems = getCachedItems();
     const isCacheFresh = cachedItems && Date.now() - cachedItems.timestamp < CACHE_TTL_MS;
 
     if (isCacheFresh) {
-        return pickRandomItem(cachedItems.items);
+        const item = pickRandomItem(cachedItems.items);
+        if (item) return item;
     }
 
-    try {
-        const items = await refreshScores(await fetchLatestSummaries());
-        cacheItems(items);
-        return pickRandomItem(items);
-    } catch (error) {
-        if (cachedItems) {
-            console.warn('Using expired Hacker News cache after refresh failed:', error);
-            return pickRandomItem(cachedItems.items);
-        }
-
-        throw error;
+    // Stale-while-revalidate: paint now, refresh later
+    if (cachedItems && cachedItems.items.length > 0) {
+        refreshCacheInBackground();
+        const item = pickRandomItem(cachedItems.items);
+        if (item) return item;
     }
+
+    // Cold start: only wait for the summaries endpoint
+    const items = await fetchLatestSummaries();
+    cacheItems(items);
+    const item = pickRandomItem(items);
+    if (!item) {
+        throw new Error('No stories available');
+    }
+    return item;
 }
 
 async function fetchLatestSummaries() {
@@ -125,11 +141,26 @@ async function fetchLatestSummaries() {
     return items;
 }
 
-async function refreshScores(items) {
-    return Promise.all(items.map(async item => ({
-        ...item,
-        score: await fetchRealtimeScore(item.id, item.score)
-    })));
+function refreshCacheInBackground() {
+    fetchLatestSummaries()
+        .then(items => cacheItems(items))
+        .catch(error => {
+            console.warn('Background cache refresh failed:', error);
+        });
+}
+
+async function updateScoreInBackground(itemId, pointsEl) {
+    if (!itemId || !pointsEl) {
+        return;
+    }
+
+    try {
+        const score = await fetchRealtimeScore(itemId, Number(pointsEl.textContent) || 0);
+        pointsEl.textContent = score;
+    } catch (error) {
+        // Non-critical; keep the score we already showed
+        console.warn('Background score update failed:', error);
+    }
 }
 
 async function fetchRealtimeScore(itemId, fallbackScore = 0) {
@@ -182,14 +213,33 @@ function getCachedItems() {
 }
 
 function cacheItems(items) {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({
-        timestamp: Date.now(),
-        items
-    }));
+    try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+            timestamp: Date.now(),
+            items
+        }));
+    } catch (error) {
+        // QuotaExceeded or private mode — non-fatal
+        console.warn('Failed to write Hacker News cache:', error);
+    }
 }
 
 function pickRandomItem(items) {
-    return items[Math.floor(Math.random() * items.length)];
+    if (!items || items.length === 0) {
+        return null;
+    }
+
+    const nowSeconds = Date.now() / 1000;
+    const preferredMaxAgeSeconds = PREFERRED_STORY_AGE_MS / 1000;
+
+    // Bias toward fresher posts so a day-old long tail doesn't dominate
+    const fresh = items.filter(item => {
+        const age = nowSeconds - Number(item.time || 0);
+        return Number.isFinite(age) && age >= 0 && age <= preferredMaxAgeSeconds;
+    });
+
+    const pool = fresh.length > 0 ? fresh : items;
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function applySettings() {
