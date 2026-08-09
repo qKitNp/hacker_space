@@ -1,10 +1,22 @@
 {
   "manifest_version": 3,
   "name": "Hacker Space",
-  "version": "1.0",
+  "version": "1.2",
   "description": "A minimal new tab page showing a random Hacker News item.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "quick-bookmark": {
+      "suggested_key": {
+        "default": "Alt+B",
+        "mac": "Alt+B"
+      },
+      "description": "Quick bookmark the current Hacker Space story (Alt+B / Option+B)"
+    }
   },
   "permissions": [],
   "host_permissions": [

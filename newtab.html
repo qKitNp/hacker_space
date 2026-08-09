@@ -25,11 +25,75 @@
                         target="_blank"><span id="points"></span> points</a></span>
                 <span id="author-container" class="meta-item"><span class="by-label">by</span> <a id="author-link"
                         class="meta-link author" href="#" target="_blank"></a></span>
+                <span class="meta-item bookmark-meta">
+                    <button id="bookmark-star" class="bookmark-star" aria-label="Bookmark this story" aria-pressed="false"
+                        title="Bookmark">
+                        <svg class="star-icon star-outline" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            aria-hidden="true">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                        <svg class="star-icon star-filled" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+                            aria-hidden="true">
+                            <polygon
+                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                            </polygon>
+                        </svg>
+                    </button>
+                </span>
             </div>
             <div id="summary" class="summary"></div>
         </div>
         <div id="error" class="error hidden"></div>
 
+    </div>
+
+    <!-- Bookmarks UI (mirrors settings, opposite side) -->
+    <button id="bookmarks-btn" class="bookmarks-btn" aria-label="Bookmarks" title="Bookmarks">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+        </svg>
+    </button>
+
+    <div id="bookmarks-panel" class="bookmarks-panel hidden" role="dialog" aria-label="Bookmarks">
+        <div class="bookmarks-panel-header">
+            <h3>Bookmarks</h3>
+            <span id="bookmarks-count" class="bookmarks-count"></span>
+        </div>
+        <div id="bookmarks-empty" class="bookmarks-empty hidden">
+            No bookmarks yet — star a story to save it.
+        </div>
+        <ul id="bookmarks-list" class="bookmarks-list"></ul>
+    </div>
+
+    <!-- Note prompt modal -->
+    <div id="note-modal" class="note-modal hidden" role="dialog" aria-modal="true" aria-labelledby="note-modal-title">
+        <div class="note-modal-backdrop" data-note-dismiss></div>
+        <div class="note-modal-card">
+            <h3 id="note-modal-title">Add a note</h3>
+            <p id="note-modal-subtitle" class="note-modal-subtitle"></p>
+            <textarea id="note-input" class="note-input" rows="3" maxlength="500"
+                placeholder="Optional note (leave blank to just save)"></textarea>
+            <div class="note-modal-actions">
+                <button type="button" id="note-cancel" class="note-btn note-btn-secondary" title="Cancel (Esc)">
+                    <span>Cancel</span>
+                    <span class="note-shortcut" aria-hidden="true">
+                        <kbd class="kbd">Esc</kbd>
+                    </span>
+                </button>
+                <button type="button" id="note-save" class="note-btn note-btn-primary"
+                    title="Save (⌘Enter)" aria-keyshortcuts="Meta+Enter Control+Enter">
+                    <span id="note-save-label">Save</span>
+                    <span class="note-shortcut" id="note-save-shortcut" aria-hidden="true">
+                        <kbd class="kbd">⌘</kbd><kbd class="kbd">↵</kbd>
+                    </span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Settings UI -->
@@ -66,6 +130,26 @@
             <label class="toggle-label"><input type="checkbox" id="toggle-domain" checked> Domain</label>
             <label class="toggle-label"><input type="checkbox" id="toggle-author" checked> Author</label>
             <label class="toggle-label"><input type="checkbox" id="toggle-summary" checked> Summary</label>
+        </div>
+        <div class="settings-section">
+            <h3>Shortcuts</h3>
+            <ul class="shortcuts-list" id="shortcuts-list">
+                <li>
+                    <span class="shortcut-label">Quick bookmark</span>
+                    <span class="shortcut-keys" id="shortcut-quick-bookmark" title="Browser shortcut">—</span>
+                </li>
+                <li>
+                    <span class="shortcut-label">Bookmark with note</span>
+                    <span class="shortcut-keys shortcut-keys-static">Star</span>
+                </li>
+                <li>
+                    <span class="shortcut-label">Save note</span>
+                    <span class="shortcut-keys shortcut-keys-static" id="shortcut-save-note">⌘↵</span>
+                </li>
+            </ul>
+            <button type="button" id="open-chrome-shortcuts" class="settings-link-btn">
+                Change in Chrome…
+            </button>
         </div>
     </div>
     <script src="newtab.js"></script>
