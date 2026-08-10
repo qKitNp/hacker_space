@@ -53,8 +53,9 @@ Neither service receives bookmarks or settings.
 ## Trust & review notes
 
 - All executable JS is in the package (`background.js`, `newtab.js`). Summary **data** is remote; scripts are not.
-- Google Fonts were historically linked from HTML; prefer system fonts for store CSP simplicity if still present in a given revision.
+- UI uses the **system font stack** only (no remote webfonts) for MV3 / Web Store simplicity.
 - Host permissions are narrow match patterns, not `<all_urls>`.
+- Backend source: https://github.com/qKitNp/hacker_news_extension_backend
 
 ## Extension of the system
 

@@ -8,10 +8,19 @@ Thanks for helping improve a small, focused new-tab extension.
 2. **Minimal permissions** — avoid new host permissions or Chrome APIs unless unavoidable.
 3. **Local-first** — user data (bookmarks, notes, settings) stays in the browser unless there is a strong reason otherwise.
 4. **No build step** unless the payoff is large — prefer plain JS/CSS/HTML.
+5. **No remote code** — keep scripts inside the package (MV3 / Web Store policy).
 
 ## Setup
 
 See [README.md](./README.md#install-development) for loading the unpacked extension.
+
+## Branch protection
+
+`main` is protected:
+
+- Force-push and branch deletion are blocked  
+- Prefer a **pull request** for external contributions  
+- Do not commit `.pem`, `.crx`, or personal packaging artifacts  
 
 ## Making changes
 
@@ -39,6 +48,11 @@ See [README.md](./README.md#install-development) for loading the unpacked extens
 - Describe **what** changed and **why**
 - Call out any permission or network-host changes explicitly
 - Screenshots help for UI changes (1280×800 is ideal if you’ll also use them for the store)
+- Link related backend PRs if the API contract changes
+
+## Security / privacy
+
+See [SECURITY.md](./SECURITY.md) and [PRIVACY.md](./PRIVACY.md). Never introduce analytics or unexpected host permissions without discussion.
 
 ## Questions
 

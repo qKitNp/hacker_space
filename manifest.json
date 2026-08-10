@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Hacker Space",
-  "version": "1.2",
-  "description": "A minimal new tab page showing a random Hacker News item.",
+  "version": "1.3.0",
+  "description": "Replace your new tab with a random Hacker News story and a short AI summary.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },

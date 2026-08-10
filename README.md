@@ -7,9 +7,11 @@ Every new tab is a quiet HN moment: title, domain, author, score, and an optiona
 | | |
 |---|---|
 | **Manifest** | V3 |
-| **Version** | 1.2 |
-| **Store / privacy** | [Privacy policy](https://qkitnp.github.io/hacker-space-privacy/) |
+| **Version** | 1.3.0 |
+| **License** | [MIT](./LICENSE) |
+| **Privacy** | [Policy](https://qkitnp.github.io/hacker-space-privacy/) · [PRIVACY.md](./PRIVACY.md) |
 | **Summary API** | [`hn.tinkerers.space`](https://hn.tinkerers.space) |
+| **Backend source** | [hacker_news_extension_backend](https://github.com/qKitNp/hacker_news_extension_backend) |
 
 ---
 
@@ -172,12 +174,17 @@ zip -r -X hacker-space.zip . -x "*.git*" -x "*.DS_Store" -x "**/.DS_Store"
 
 ## Backend
 
-Summaries are produced by a separate service (not in this repository) at:
+Summaries are produced by a separate open-source service:
 
-- **Production:** https://hn.tinkerers.space  
-- Useful routes: `/latest_summaries?limit=…`, `/random`, `/status`
+| | |
+|---|---|
+| **Source** | [qKitNp/hacker_news_extension_backend](https://github.com/qKitNp/hacker_news_extension_backend) |
+| **Production** | https://hn.tinkerers.space |
+| **Routes** | `/latest_summaries?limit=…`, `/random`, `/status` |
 
 If the API is down, a valid local cache still works until it ages out; with no cache, the new tab shows an error state.
+
+To develop against a local backend, change `API_URL` in `newtab.js` and reload the extension.
 
 ---
 
@@ -189,6 +196,24 @@ Local bookmarks, notes, settings, and score refresh only support that new-tab ex
 
 ---
 
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
+
+`main` is protected: force-pushes and branch deletion are blocked. Prefer pull requests for external contributions. Maintainers can push with admin bypass when needed.
+
+---
+
+## Related repos
+
+| Repo | Role |
+|------|------|
+| [qKitNp/hacker_space](https://github.com/qKitNp/hacker_space) | This extension |
+| [qKitNp/hacker_news_extension_backend](https://github.com/qKitNp/hacker_news_extension_backend) | Summarizer API |
+| [qKitNp/hacker-space-privacy](https://github.com/qKitNp/hacker-space-privacy) | Hosted privacy policy |
+
+---
+
 ## License
 
-No license file is checked in yet. If you want this open-source under MIT (or another license), open an issue or PR.
+[MIT](./LICENSE) — free to use, modify, and distribute with attribution.

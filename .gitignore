@@ -1,8 +1,18 @@
+# OS / editor
 .DS_Store
 **/.DS_Store
-*.crx
-*.pem
-*.zip
 .idea/
 .vscode/
 *.log
+*.swp
+
+# Extension packaging / secrets (never commit)
+*.crx
+*.pem
+*.zip
+hacker-space-webstore.zip
+hn_tab.crx
+
+# Local scratch
+tmp/
+.temp/
